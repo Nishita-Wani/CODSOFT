@@ -1,0 +1,117 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class Task44 extends JFrame {
+
+    private String[] questions = {"What is the capital of France?", "What is 2+2?", "What is the largest planet in our solar system?"};
+    private String[][] options = {{"Berlin", "Paris", "London", "Rome"}, {"3", "4", "5", "6"}, {"Earth", "Saturn", "Jupiter", "Mars"}};
+    private int[] correctAnswers = {1, 1, 2};
+    private int score = 0;
+    private int currentQuestion = 0;
+    private JLabel questionLabel;
+    private JRadioButton[] optionButtons;
+    private JButton submitButton;
+    private JLabel timerLabel;
+    private int timeRemaining = 10;
+    private Timer timer;
+
+    public Task44() {
+        setLayout(new BorderLayout());
+
+        
+        questionLabel = new JLabel(questions[0], SwingConstants.CENTER);
+        add(questionLabel, BorderLayout.NORTH);
+
+        
+        JPanel optionsPanel = new JPanel(new GridLayout(4, 1));
+        optionButtons = new JRadioButton[4];
+        ButtonGroup group = new ButtonGroup();
+        for (int i = 0; i < 4; i++) {
+            optionButtons[i] = new JRadioButton(options[0][i]);
+            group.add(optionButtons[i]);
+            optionsPanel.add(optionButtons[i]);
+        }
+        add(optionsPanel, BorderLayout.CENTER);
+
+        
+        submitButton = new JButton("Submit");
+        submitButton.addActionListener(new SubmitButtonListener());
+        add(submitButton, BorderLayout.SOUTH);
+
+        
+        timerLabel = new JLabel("Time remaining: " + timeRemaining, SwingConstants.CENTER);
+        add(timerLabel, BorderLayout.EAST);
+
+       
+        timer = new Timer(1000, new TimerListener());
+        timer.start();
+
+        
+        setTitle("Quiz Application");
+        setSize(400, 300);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setVisible(true);
+    }
+
+    private class SubmitButtonListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            boolean answered = false;
+            for (int i = 0; i < 4; i++) {
+                if (optionButtons[i].isSelected()) {
+                    answered = true;
+                    if (i == correctAnswers[currentQuestion]) {
+                        score++;
+                    }
+                    break;
+                }
+            }
+            if (!answered) {
+                JOptionPane.showMessageDialog(null, "Please select an answer!", "Warning", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            loadNextQuestion();
+        }
+    }
+
+    private class TimerListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            timeRemaining--;
+            timerLabel.setText("Time remaining: " + timeRemaining);
+            if (timeRemaining == 0) {
+                loadNextQuestion();
+            }
+        }
+    }
+
+    private void loadNextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            questionLabel.setText(questions[currentQuestion]);
+            for (int i = 0; i < 4; i++) {
+                optionButtons[i].setText(options[currentQuestion][i]);
+                optionButtons[i].setSelected(false);
+            }
+            timeRemaining = 10;
+            timerLabel.setText("Time remaining: " + timeRemaining);
+        } else {
+            endQuiz();
+        }
+    }
+
+    private void endQuiz() {
+        timer.stop();
+        questionLabel.setText("Quiz finished! Your score is " + score + "/" + questions.length);
+        for (int i = 0; i < 4; i++) {
+            optionButtons[i].setVisible(false);
+        }
+        submitButton.setVisible(false);
+        timerLabel.setVisible(false);
+    }
+
+    public static void main(String[] args) {
+        new Task44();
+    }
+}
+
