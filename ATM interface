@@ -1,4 +1,4 @@
-package Thirdtask;
+
 import java.util.Scanner;
 
 //Class representing the user's bank account
