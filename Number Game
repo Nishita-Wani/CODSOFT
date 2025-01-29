@@ -1,0 +1,70 @@
+import java.util.Random;
+import java.util.Scanner;
+
+
+public class Task1 
+{
+	public static void main(String[] args) 
+	{
+        Scanner sc = new Scanner(System.in);
+        Random random = new Random();
+        int numberOfRounds = 0;
+        int totalScore = 0;
+
+        while (true) 
+        {
+            numberOfRounds++;
+            int numberToGuess = random.nextInt(100) + 1;
+            int numberOfTries = 0;
+            boolean won = false;
+
+            System.out.println("Round " + numberOfRounds);
+            System.out.println("Guess a number between 1 and 100.");
+
+            while (numberOfTries < 10) 
+            {
+                System.out.print("Enter your guess: ");
+                int guess = sc.nextInt();
+                numberOfTries++;
+
+                if (guess < numberToGuess)
+                {
+                    System.out.println("Your guess is too low.");
+                } 
+                else if (guess > numberToGuess) 
+                {
+                    System.out.println("Your guess is too high.");
+                } 
+                else 
+                {
+                    won = true;
+                    break;
+                }
+            }
+            if (won) 
+            {
+                System.out.println("Congratulations! You won in " + numberOfTries + " tries.");
+                totalScore += 100 - numberOfTries;
+            } else
+            {
+                System.out.println("Sorry, you lost. The number was " + numberToGuess + ".");
+            }
+
+            System.out.print("Do you want to play again? (yes/no): ");
+            String response = sc.next();
+
+            if (!response.equalsIgnoreCase("yes")) 
+            {
+                break;
+            }
+        }
+
+        System.out.println("Your total score is " + totalScore + ".");
+        System.out.println("Thanks for playing!");
+
+}
+}
+
+
+
+
